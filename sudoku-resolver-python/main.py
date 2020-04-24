@@ -1,4 +1,5 @@
 from random import randrange
+import time
 
 print('SudokuResolver')
 
@@ -42,6 +43,21 @@ def print_board(board):
         print("|")
     print("-"*31)
 
+def board_to_string(board):
+    result = ""
+    for row in range(9):
+        if row % 3==0:
+            result += "-"*31 + "\n"
+        for col in range(9):
+            if col % 3==0:
+                 result += "|"
+            result += " "
+            result += str(board[row][col])
+            result += " "
+        result += "|" + "\n"
+    result += "-"*31
+    return result
+
 def in_division(num, row, col, board):
     div_row = row // 3
     div_col = col // 3
@@ -60,6 +76,20 @@ def in_column(num, col, board):
 def is_valid(num, row, col, board):
     return num not in board[row] and not in_column(num, col, board) and not in_division(num, row, col, board)
 
+def resolve(board):
+    for row in range(len(board)):
+        for col in range(len(board[row])):
+            board[row][col] = 9
+            redraw_board(board, .5)
+    return board
+
+# https://stackoverflow.com/questions/11474391/is-there-go-up-line-character-opposite-of-n
+def redraw_board(board, delay=0):
+    time.sleep(delay)
+    jump_backwards_prefix = "\033[F"*13
+    print(jump_backwards_prefix + board_to_string(board))
+
 if __name__ == "__main__":
-    board = generate_board(38)
+    board = generate_board(8)
     print_board(board)
+    resolve(board)
